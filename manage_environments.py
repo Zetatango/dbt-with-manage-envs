@@ -62,7 +62,7 @@ def change_masking_policy_ownership(engine: Engine, database: str, target_role: 
     with engine.begin() as tx:
         for policy_info in tx.execute(stmt).fetchall():
             tx.execute(f"GRANT OWNERSHIP ON MASKING POLICY {policy_info[2]}.{policy_info[3]}.{policy_info[1]}"
-                       f"TO ROLE {target_role} REVOKE CURRENT GRANTS"
+                       f" TO ROLE {target_role} REVOKE CURRENT GRANTS"
                        ).fetchall()
 
 @click.command()
