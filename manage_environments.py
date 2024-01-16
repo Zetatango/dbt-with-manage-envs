@@ -3,8 +3,7 @@ import os
 from typing import Optional
 
 import click
-from sqlalchemy import create_engine, text
-from sqlalchemy.sql import Select
+from sqlalchemy import create_engine, text, select
 from sqlalchemy import literal_column
 from sqlalchemy.engine import Engine
 from snowflake.sqlalchemy import URL
@@ -16,14 +15,15 @@ SNOWFLAKE_ROLE = os.environ["SNOWFLAKE_ROLE"]
 
 
 def change_objects_ownership(engine: Engine, database: str, target_role: str) -> None:
-    stmt = Select(
+
+    stmt = select(
         [
             literal_column("table_type"),
             literal_column("table_schema"),
             literal_column("table_name"),
         ],
-        from_obj=text(f"{database}.INFORMATION_SCHEMA.TABLES"),
-        whereclause=literal_column("table_owner") == "DBT_PRODUCTION",
+    ).select_from(text(f"{database}.INFORMATION_SCHEMA.TABLES")).where(
+        literal_column("table_owner") == "DBT_PRODUCTION"
     )
 
     with engine.begin() as tx:

@@ -1,3 +1,5 @@
-idna<2.9
+idna
 click
 snowflake-sqlalchemy
+dbt-core==1.7.4
+dbt-snowflake==1.7.1
